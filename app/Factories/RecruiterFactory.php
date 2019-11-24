@@ -10,6 +10,7 @@ use App\Organization;
 use App\Asset;
 use App\Address;
 use App\Recruiter;
+use App\StoreAsset;
 
 
 class RecruiterFactory implements RCreatorFactory
@@ -22,17 +23,6 @@ class RecruiterFactory implements RCreatorFactory
         $user->email = $input['email'];
         $user->password = bcrypt($input['password']);
         if (!$user->save()) {
-            return false;
-        }
-        // Asset
-        $asset = new Asset;
-        $asset->isvideo = false;
-        $asset->isimage = true;
-        $asset->file_extension = 'png';
-        $asset->length = 350;
-        $asset->file_uri = "http://fake-path-uri";
-        $asset->path = "C:/fake-path-uri";
-        if (!$asset->save()) {
             return false;
         }
         // Address
@@ -49,7 +39,8 @@ class RecruiterFactory implements RCreatorFactory
         $recruiter->name = $input['name'];
         $recruiter->user_id = $user->id;
         $recruiter->address_id = $address->id;
-        $recruiter->profile_picture = $asset->id;
+        $assetCreator = new StoreAsset($input['profile_picture']);
+        $recruiter->profile_picture = $assetCreator->getId();
         if (!$recruiter->save()) {
             return false;
         }

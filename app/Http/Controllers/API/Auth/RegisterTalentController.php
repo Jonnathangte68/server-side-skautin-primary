@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Auth;
 use Illuminate\Http\Request;
 use App\Certification;
 use App\CreateTalentUser;
+use App\StoreAsset;
 use App\Utils\Logger;
 use App\Utils\Util;
 use App\CustomValidators\CategoryExistsBySubcategory;

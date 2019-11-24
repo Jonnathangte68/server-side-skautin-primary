@@ -18,7 +18,7 @@ class CreateRecruitersTable extends Migration
             $table->string('name');
             $table->bigInteger('user_id')->unsigned();
             $table->unsignedBigInteger('address_id');
-            $table->unsignedBigInteger('profile_picture');
+            $table->unsignedBigInteger('profile_picture')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

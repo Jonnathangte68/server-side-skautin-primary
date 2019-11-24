@@ -22,4 +22,8 @@ class Recruiter extends Model
     {
         return $this->belongsToMany('App\Subcategory')->using('App\SubcategoryRecruiter', 'subcategory_id', 'recruiter_id');
     }
+
+    public function profile_picture() {
+        return $this->belongsTo('App\Asset');
+    }
 }

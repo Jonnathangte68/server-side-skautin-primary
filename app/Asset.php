@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Asset extends Model
 {
     use SoftDeletes;
+
+    public function talent() {
+        return $this->belongsTo('App\Talent');
+    }
 }
