@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAssetsTable extends Migration
+class CreateTalentPlaylistTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,10 @@ class CreateAssetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('assets', function (Blueprint $table) {
+        Schema::create('talent_playlist', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->boolean('isvideo');
-            $table->boolean('isimage');
-            $table->string('file_extension');
-            $table->integer('length');
-            $table->string('file_uri');
-            $table->string('path');
+            $table->unsignedBigInteger('talent_id')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -33,6 +27,6 @@ class CreateAssetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('assets');
+        Schema::dropIfExists('talent_playlist');
     }
 }

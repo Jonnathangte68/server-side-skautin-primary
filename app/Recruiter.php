@@ -26,4 +26,24 @@ class Recruiter extends Model
     public function profile_picture() {
         return $this->belongsTo('App\Asset');
     }
+
+    public function scopeName($query, $name)
+    {
+        return $query->where('name', $name);
+    }
+
+    // public function scopeEmail($query, $type)
+    // {
+    //     return $query->where('email', $email);
+    // }
+
+    // public function scopeCategory($query, $category)
+    // {
+    //     return $query->where('category', $category);
+    // }
+
+    // public function scopeSubcategory($query, $subcategory)
+    // {
+    //     return $query->where('subcategory', $subcategory);
+    // }
 }

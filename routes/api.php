@@ -14,13 +14,22 @@ use Illuminate\Http\Request;
 */
 
 Route::post('login', 'API\UserController@login');
-// Route::post('register', 'API\UserController@register');
 Route::post('register-talent', 'API\Auth\RegisterTalentController@register');
 Route::post('register-recruiter', 'API\Auth\RegisterRecruiterController@register');
+Route::get('/change_route_name', function () {
+    return response()->json(['error' => 'unauthenticated']);
+})->name('change_route_name');
 
 Route::group(['middleware' => 'auth:api'], function(){
     Route::prefix('/v1')->group(function () {
+    Route::get('retrieveImage/{id}', 'API\AssetManager@getImage');
+    Route::get('downloadImage/{id}', 'API\AssetManager@downloadFile');
     Route::post('details', 'API\UserController@details');
+    Route::post('add-playlist-video', 'API\UserController@details');
+    Route::get('search', 'API\SearchController');
+    // Route::get('stream/{id}', 'API\UserController@details');
+    // Route::get('pending-invitations', 'API\UserController@details');
+    // Route::get('get-playlist', 'API\UserController@details');
     
     // Resources
     

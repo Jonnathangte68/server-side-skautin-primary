@@ -32,4 +32,14 @@ class Talent extends Model
     public function profile_picture() {
         return $this->hasOne('App\Asset');
     }
+
+    public function scopeName($query, $name)
+    {
+        return $query->where('name', $name);
+    }
+
+    public function talentplaylist()
+    {
+        return $this->hasOne('App\TalentPlaylist');
+    }
 }

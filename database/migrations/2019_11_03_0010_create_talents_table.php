@@ -39,7 +39,12 @@ class CreateTalentsTable extends Migration
      * @return void
      */
     public function down()
-    {
+    { 
+        // Crossed-references for talent playlist 
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Schema::drop('assets');
+        Schema::drop('talent_playlist');
         Schema::dropIfExists('talents');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

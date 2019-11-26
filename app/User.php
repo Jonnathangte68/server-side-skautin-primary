@@ -31,4 +31,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Talent');
     }
+
+    public function scopeEmail($query, $email)
+    {
+        return $query->where('email', $email);
+    }
 }

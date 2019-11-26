@@ -50,10 +50,13 @@ class VacantController extends \App\Http\Controllers\Controller
             return response()->json(['status' => false, 'message' => 'Validation errors']);
         } else {
             // store
-            $vacant             = new Vacant;
-            $vacant->name       = Input::get('name');
+            $vacant               = new Vacant;
+            $vacant->name         = Input::get('name');
+            $vacant->description  = Input::get('description');
+            $vacant->city_id      = Input::get('city_id');
+            $vacant->recruiter_id = Input::get('recruiter_id');
             $vacant->save();
-            return response()->json(['status' => true, 'message' => 'Country has been registered']);
+            return response()->json(['status' => true, 'message' => 'Job has been registered']);
         }
     }
 

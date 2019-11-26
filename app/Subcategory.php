@@ -23,4 +23,9 @@ class Subcategory extends Model
     {
         return $this->belongsTo('App\Category');
     }
+
+    public function scopeName($query, $subcategory)
+    {
+        return $query->where('name', $subcategory);
+    }
 }
