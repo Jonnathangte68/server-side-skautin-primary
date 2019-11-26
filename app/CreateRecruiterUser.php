@@ -11,7 +11,6 @@ class CreateRecruiterUser extends Model
     // Return: true or false in case stored satisfactory or not.
     public function store(Array $input) 
     {
-        new Logger('Starting to execute store for create a new recruiter');
         $factory = new RecruiterFactory;
         return $factory->createRecruiter($input);
     }

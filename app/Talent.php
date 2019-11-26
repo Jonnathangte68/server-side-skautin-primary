@@ -28,4 +28,18 @@ class Talent extends Model
     {
         return $this->belongsToMany('App\Subcategory')->using('App\SubcategoryTalent', 'subcategory_id', 'talent_id');
     }
+
+    public function profile_picture() {
+        return $this->hasOne('App\Asset');
+    }
+
+    public function scopeName($query, $name)
+    {
+        return $query->where('name', $name);
+    }
+
+    public function talentplaylist()
+    {
+        return $this->hasOne('App\TalentPlaylist');
+    }
 }

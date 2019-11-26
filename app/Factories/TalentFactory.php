@@ -3,18 +3,17 @@
 namespace App\Factories;
 
 use App\Interfaces\CreatorFactory;
-use App\Utils\Logger;
 use App\Utils\Util;
 use App\User;
 use App\Address;
 use App\Talent;
+use App\StoreAsset;
 
 
 class TalentFactory implements CreatorFactory
 {
   public function createTalent(Array $input)
   {
-    new Logger('Factory talent started!');
     $utilities = new Util;
     $user = new User;
     $user->email = $input['email'];
@@ -30,13 +29,15 @@ class TalentFactory implements CreatorFactory
     if (!$address->save()) {
         return false;
     }
+    $assetCreator = new StoreAsset($input['profile_picture']);
+    $assetId = $assetCreator->getId();
     $talent = new Talent;
     $talent->name = $input['name'];
     $talent->title = $input['title'];
     $talent->birth_year = $input['birth_year'];
     $talent->gender = $input['gender'];
-    $talent->profile_image = $input['profile_image'];
     $talent->user_id = $user->id;
+    $talent->profile_picture = $assetId;
     $talent->address_id = $address->id;
     if (!$talent->save()) {
         return false;
