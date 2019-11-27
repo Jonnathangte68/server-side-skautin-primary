@@ -27,12 +27,13 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('details', 'API\UserController@details');
     Route::post('add-playlist-video', 'API\UserController@details');
     Route::get('search', 'API\SearchController');
-    // Route::get('stream/{id}', 'API\UserController@details');
+    Route::get('stream/{id}', 'API\VideoStreamer');
+    
     // Route::get('pending-invitations', 'API\UserController@details');
-    // Route::get('get-playlist', 'API\UserController@details');
     
     // Resources
-    
+
+    Route::apiResource('talentplaylists', 'API\TalentPlaylistController');
     Route::apiResource('addresses', 'API\AddressController');
     Route::apiResource('advertisements', 'API\AdvertisementController');
     Route::apiResource('applications', 'API\ApplicationController');
@@ -54,6 +55,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::apiResource('subcategories', 'API\SubcategoryController');
     Route::apiResource('talents', 'API\TalentController');
     Route::apiResource('vacants', 'API\VacantController');
+    
     // Not a resource controller TODO
     // Route::resource('users', 'API\UserController');
     });

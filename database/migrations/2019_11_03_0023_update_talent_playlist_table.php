@@ -13,7 +13,7 @@ class UpdateTalentPlaylistTable extends Migration
      */
     public function up()
     {
-        Schema::table('talent_playlist', function (Blueprint $table) {
+        Schema::table('talent_playlists', function (Blueprint $table) {
             $table->foreign('talent_id')->references('id')->on('talents')->onDelete('cascade'); 
         });
     }

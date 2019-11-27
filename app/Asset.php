@@ -12,4 +12,8 @@ class Asset extends Model
     public function talent() {
         return $this->belongsTo('App\Talent');
     }
+
+    public function talent_playlists() {
+        return $this->belongsTo('App\TalentPlaylists');
+    }
 }
