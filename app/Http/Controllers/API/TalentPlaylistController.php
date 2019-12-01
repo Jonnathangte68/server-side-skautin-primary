@@ -64,7 +64,7 @@ class TalentPlaylistController extends \App\Http\Controllers\Controller
                 }
                 return response()->json(['status' => true, 'message' => 'New assets has been added to playlist']);
             } else {
-                $instance = new CreateTalentPlaylists;
+                $instance = new CreateTalentPlaylist;
                 if ($instance->store($request->all())) {
                     return response()->json(['status' => true, 'message' => 'Playlist has been registered']);
                 } else {

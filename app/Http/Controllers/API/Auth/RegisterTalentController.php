@@ -51,6 +51,12 @@ class RegisterTalentController extends \App\Http\Controllers\Controller
     protected function validateCustomFields(Array $input) {
         // Check that category exists for all subcategories
         $utilities = new Util;
+        if(empty($input['categories'])) {
+            return false;
+        }
+        if(empty($input['subcategories'])) {
+            return false;
+        }
         $categories = $utilities->parseStringToArray($input['categories']);
         $subcategories = $utilities->parseStringToArray($input['subcategories']);
         $subcategoryByCategoryValidator = new CategoryExistsBySubcategory;

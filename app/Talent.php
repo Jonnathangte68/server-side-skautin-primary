@@ -42,4 +42,9 @@ class Talent extends Model
     {
         return $this->hasOne('App\TalentPlaylists');
     }
+
+    public function connections()
+    {
+        return $this->hasManyThrough('App\Connection', 'App\User');
+    }
 }

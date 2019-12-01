@@ -22,7 +22,15 @@ class RecruiterFactory implements RCreatorFactory
         $user = new User;
         $user->email = $input['email'];
         $user->password = bcrypt($input['password']);
-        if (!$user->save()) {
+        try {
+            if (!$user->save()) {
+                return false;
+            }
+        } catch(\Illuminate\Database\QueryException $ex) {
+            report($ex);
+            if(!empty($user)) {
+                $user->forceDelete();
+            }
             return false;
         }
         // Address
@@ -31,7 +39,18 @@ class RecruiterFactory implements RCreatorFactory
         $address->second_line = $utilities->getValueByArrayIndexOrReplace($input, 'second_line', NULL);
         $address->zip_code = $utilities->getValueByArrayIndexOrReplace($input, 'zip_code', 00000);
         $address->city_id = $input['city'];
-        if (!$address->save()) {
+        try {
+            if (!$address->save()) {
+                return false;
+            }
+        } catch(\Illuminate\Database\QueryException $ex) {
+            report($ex);
+            if(!empty($user)) {
+                $user->forceDelete();
+            }
+            if(!empty($address)) {
+                $address->forceDelete();
+            }
             return false;
         }
         // Recruiter
@@ -41,7 +60,21 @@ class RecruiterFactory implements RCreatorFactory
         $recruiter->address_id = $address->id;
         $assetCreator = new StoreAsset($input['profile_picture']);
         $recruiter->profile_picture = $assetCreator->getId();
-        if (!$recruiter->save()) {
+        try {
+            if (!$recruiter->save()) {
+                return false;
+            }
+        } catch(\Illuminate\Database\QueryException $ex) {
+            report($ex);
+            if(!empty($user)) {
+                $user->forceDelete();
+            }
+            if(!empty($address)) {
+                $address->forceDelete();
+            }
+            if(!empty($recruiter)) {
+                $recruiter->forceDelete();
+            }
             return false;
         }
         $categories = $utilities->parseStringToArray($input['categories']);

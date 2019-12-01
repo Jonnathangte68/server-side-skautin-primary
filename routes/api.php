@@ -13,27 +13,36 @@ use Illuminate\Http\Request;
 |
 */
 
+// Public Routes
 Route::post('login', 'API\UserController@login');
 Route::post('register-talent', 'API\Auth\RegisterTalentController@register');
 Route::post('register-recruiter', 'API\Auth\RegisterRecruiterController@register');
 Route::get('/change_route_name', function () {
     return response()->json(['error' => 'unauthenticated']);
 })->name('change_route_name');
+// End of public Routes
+
+// Testing Routes
+// Route::apiResource('talentplaylists', 'API\TalentPlaylistController');
+// Route::apiResource('favorite-folders', 'API\FavoriteFolderController');
+// End testing routes.
+
+// Private api routes
 
 Route::group(['middleware' => 'auth:api'], function(){
     Route::prefix('/v1')->group(function () {
     Route::get('retrieveImage/{id}', 'API\AssetManager@getImage');
     Route::get('downloadImage/{id}', 'API\AssetManager@downloadFile');
     Route::post('details', 'API\UserController@details');
-    Route::post('add-playlist-video', 'API\UserController@details');
+    // Route::post('add-playlist-video', 'API\UserController@details');
     Route::get('search', 'API\SearchController');
     Route::get('stream/{id}', 'API\VideoStreamer');
-    
-    // Route::get('pending-invitations', 'API\UserController@details');
+    Route::get('get-users-on-connection', 'API\UsersDetailsOnConnections');
     
     // Resources
 
     Route::apiResource('talentplaylists', 'API\TalentPlaylistController');
+    Route::apiResource('favorite-folders', 'API\FavoriteFolderController');
     Route::apiResource('addresses', 'API\AddressController');
     Route::apiResource('advertisements', 'API\AdvertisementController');
     Route::apiResource('applications', 'API\ApplicationController');
@@ -55,6 +64,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::apiResource('subcategories', 'API\SubcategoryController');
     Route::apiResource('talents', 'API\TalentController');
     Route::apiResource('vacants', 'API\VacantController');
+    Route::apiResource('pending-invitations', 'API\PendingInvitationController');
     
     // Not a resource controller TODO
     // Route::resource('users', 'API\UserController');

@@ -16,4 +16,9 @@ class Asset extends Model
     public function talent_playlists() {
         return $this->belongsTo('App\TalentPlaylists');
     }
+
+    public function favoritefolders()
+    {
+        return $this->belongsToMany('App\FavoriteFolders', 'asset_favorite_folder');
+    }
 }

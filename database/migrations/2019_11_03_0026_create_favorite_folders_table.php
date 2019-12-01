@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateConnectionsTable extends Migration
+class CreateFavoriteFoldersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,16 @@ class CreateConnectionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('connections', function (Blueprint $table) {
+        Schema::create('favorite_folders', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('name');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::table('favorite_folders', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); 
         });
     }
 
@@ -27,6 +33,6 @@ class CreateConnectionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('connections');
+        Schema::dropIfExists('favorite_folders');
     }
 }

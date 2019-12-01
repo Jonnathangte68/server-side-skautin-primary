@@ -32,8 +32,22 @@ class User extends Authenticatable
         return $this->belongsTo('App\Talent');
     }
 
+    public function recruiter()
+    {
+        return $this->belongsTo('App\Recruiter');
+    }
+
+    public function connections()
+    {
+        return $this->hasMany('App\Connection', 'follower_id', 'id');
+    }
+
     public function scopeEmail($query, $email)
     {
         return $query->where('email', $email);
+    }
+
+    public function favoritefolders() {
+        return $this->belongsTo('App\FavoriteFolder');
     }
 }
