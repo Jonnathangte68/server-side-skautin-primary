@@ -13,7 +13,7 @@ class CreateTalentPlaylistTable extends Migration
      */
     public function up()
     {
-        Schema::create('talent_playlist', function (Blueprint $table) {
+        Schema::create('talent_playlists', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('talent_id')->nullable();
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateTalentPlaylistTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('talent_playlist');
+        Schema::dropIfExists('talent_playlists');
     }
 }

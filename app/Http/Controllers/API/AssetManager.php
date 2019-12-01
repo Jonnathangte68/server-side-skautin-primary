@@ -37,7 +37,7 @@ class AssetManager extends \App\Http\Controllers\Controller
     }
 
     protected function serveImage($file_name) {
-        $file = '/Users/jonnathanguarate/workspace/api/storage/app/profile_images/' . $file_name;
+        $file = getenv('ASSET_STORAGE_ADDR') . $file_name;
         $type = 'image/jpeg';
         header('Content-Type:'.$type);
         header('Content-Length: ' . filesize($file));

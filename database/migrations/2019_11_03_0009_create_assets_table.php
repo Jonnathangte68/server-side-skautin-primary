@@ -21,13 +21,13 @@ class CreateAssetsTable extends Migration
             $table->integer('length');
             $table->string('file_uri');
             $table->string('path');
-            $table->unsignedBigInteger('talent_playlist_id')->nullable();
+            $table->unsignedBigInteger('talent_playlists_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
         Schema::table('assets', function (Blueprint $table) {
-            $table->foreign('talent_playlist_id')->references('id')->on('talent_playlist')->onDelete('cascade'); 
+            $table->foreign('talent_playlists_id')->references('id')->on('talent_playlists')->onDelete('cascade'); 
         });
     }
 

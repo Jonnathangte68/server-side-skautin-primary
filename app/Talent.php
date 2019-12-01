@@ -38,8 +38,13 @@ class Talent extends Model
         return $query->where('name', $name);
     }
 
-    public function talentplaylist()
+    public function talent_playlist()
     {
-        return $this->hasOne('App\TalentPlaylist');
+        return $this->hasOne('App\TalentPlaylists');
+    }
+
+    public function connections()
+    {
+        return $this->hasManyThrough('App\Connection', 'App\User');
     }
 }

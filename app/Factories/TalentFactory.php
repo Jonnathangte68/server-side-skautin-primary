@@ -18,7 +18,15 @@ class TalentFactory implements CreatorFactory
     $user = new User;
     $user->email = $input['email'];
     $user->password = bcrypt($input['password']);
-    if (!$user->save()) {
+    try{
+        if (!$user->save()) {
+            return false;
+        }
+    } catch(\Illuminate\Database\QueryException $ex) {
+        report($ex);
+        if(!empty($user)) {
+            $user->forceDelete();
+        }
         return false;
     }
     $address = new Address;
@@ -26,7 +34,18 @@ class TalentFactory implements CreatorFactory
     $address->second_line = $utilities->getValueByArrayIndexOrReplace($input, 'second_line', NULL); // Not required
     $address->zip_code = $utilities->getValueByArrayIndexOrReplace($input, 'zip_code', 00000); // Not required;
     $address->city_id = $input['city'];
-    if (!$address->save()) {
+    try{
+        if (!$address->save()) {
+            return false;
+        }
+    } catch(\Illuminate\Database\QueryException $ex) {
+        report($ex);
+        if(!empty($user)) {
+            $user->forceDelete();
+        }
+        if(!empty($address)) {
+            $address->forceDelete();
+        }
         return false;
     }
     $assetCreator = new StoreAsset($input['profile_picture']);
@@ -39,7 +58,21 @@ class TalentFactory implements CreatorFactory
     $talent->user_id = $user->id;
     $talent->profile_picture = $assetId;
     $talent->address_id = $address->id;
-    if (!$talent->save()) {
+    try {
+        if (!$talent->save()) {
+            return false;
+        }
+    } catch(\Illuminate\Database\QueryException $ex) {
+        report($ex);
+        if(!empty($user)) {
+            $user->forceDelete();
+        }
+        if(!empty($address)) {
+            $address->forceDelete();
+        }
+        if(!empty($talent)) {
+            $talent->forceDelete();
+        }
         return false;
     }
     $categories = $utilities->parseStringToArray($input['categories']);

@@ -9,6 +9,11 @@ class Recruiter extends Model
 {
     use SoftDeletes;
 
+    public function user()
+    {
+        return $this->hasOne('App\User');
+    }
+
     public function organization() {
         return $this->hasOne('App\Organization');
     }
@@ -25,6 +30,11 @@ class Recruiter extends Model
 
     public function profile_picture() {
         return $this->belongsTo('App\Asset');
+    }
+
+    public function connections()
+    {
+        return $this->hasManyThrough('App\Connection', 'App\User');
     }
 
     public function scopeName($query, $name)
