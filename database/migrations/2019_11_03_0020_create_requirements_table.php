@@ -16,8 +16,13 @@ class CreateRequirementsTable extends Migration
         Schema::create('requirements', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('description');
+            $table->unsignedBigInteger('vacant_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::table('requirements', function (Blueprint $table) {
+            $table->foreign('vacant_id')->references('id')->on('vacants')->onDelete('cascade'); 
         });
     }
 

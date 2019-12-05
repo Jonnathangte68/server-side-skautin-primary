@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api;
 
 use Illuminate\Http\Request;
 use App\Vacant;
+use App\Recruiter;
+use App\Requirement;
 use Validator;
 use Illuminate\Support\Facades\Input;
 
@@ -14,11 +16,18 @@ class VacantController extends \App\Http\Controllers\Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         // get all the adds and retrieve
-        $vacants = Vacant::all();
-        return response()->json($vacants);
+        $userId = $request->user()->id;
+        $recruiter = Recruiter::where('user_id', $userId)->firstOrFail();
+        $result = array();
+        foreach($recruiter->vacants()->get() as $vacant) {
+            $requirements = Requirement::where('vacant_id', $vacant->id)->get();
+            $vacant['requirements'] = $requirements;
+            array_push($result, $vacant);
+        }
+        return response()->json($result);
     }
 
     /**
@@ -41,7 +50,8 @@ class VacantController extends \App\Http\Controllers\Controller
     {
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'       => 'required'
+            'name'       => 'required',
+            'city_id'    => 'required:digits'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -49,14 +59,25 @@ class VacantController extends \App\Http\Controllers\Controller
             // reject
             return response()->json(['status' => false, 'message' => 'Validation errors']);
         } else {
+            $userId = $request->user()->id;
+            $recruiter = Recruiter::where('user_id', $userId)->firstOrFail();
             // store
             $vacant               = new Vacant;
             $vacant->name         = Input::get('name');
             $vacant->description  = Input::get('description');
             $vacant->city_id      = Input::get('city_id');
-            $vacant->recruiter_id = Input::get('recruiter_id');
-            $vacant->save();
-            return response()->json(['status' => true, 'message' => 'Job has been registered']);
+            $vacant->recruiter_id = $recruiter->id;
+            if($vacant->save()) {
+                foreach($request->input('requirements') as $requirement) {
+                    $requirementObject                   = new Requirement;
+                    $requirementObject->description      = $requirement;
+                    $requirementObject->vacant_id        = $vacant->id;
+                    $requirementObject->save();
+                }
+                return response()->json(['status' => true, 'message' => 'Vacant has been added']);
+            } else {
+                return response()->json(['status' => false, 'message' => 'Validation errors']);
+            }
         }
     }
 
@@ -95,7 +116,8 @@ class VacantController extends \App\Http\Controllers\Controller
     {
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'       => 'required'
+            'name'       => 'required',
+            'city_id'    => 'required:digits'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -103,11 +125,27 @@ class VacantController extends \App\Http\Controllers\Controller
             // reject
             return response()->json(['status' => false, 'message' => 'Validation errors']);
         } else {
-            // store
-            $vacant             = Vacant::find($id);
-            $vacant->name       = Input::get('name');
-            $vacant->save();
-            return response()->json(['status' => true, 'message' => 'Country has been registered']);
+            $userId = $request->user()->id;
+            $recruiter = Recruiter::where('user_id', $userId)->firstOrFail();
+            $vacant = Vacant::findOrFail($id);
+            if($vacant->recruiter_id !== $recruiter->id) {
+                return response()->json(['status' => false, 'message' => 'Validation errors']);
+            }
+            $vacant->name         = Input::get('name');
+            $vacant->description  = Input::get('description');
+            $vacant->city_id      = Input::get('city_id');
+            if($vacant->save()) {
+                Requirement::where('vacant_id', $id)->delete();
+                foreach($request->input('requirements') as $requirement) {
+                    $requirementObject                   = new Requirement;
+                    $requirementObject->description      = $requirement;
+                    $requirementObject->vacant_id        = $id;
+                    $requirementObject->save();
+                }
+                return response()->json(['status' => true, 'message' => 'Vacant has been updated!']);
+            } else {
+                return response()->json(['status' => false, 'message' => 'Validation errors']);
+            }
         }
     }
 

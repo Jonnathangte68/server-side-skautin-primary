@@ -9,6 +9,14 @@ class Vacant extends Model
 {
     use SoftDeletes;
 
+    public function recruiter() {
+        return $this->belongsTo('App\Recruiter');
+    }
+
+    public function requirements() {
+        return $this->hasMany('App\Requirement');
+    }
+
     public function scopeName($query, $name)
     {
         return $query->where('name', $name);

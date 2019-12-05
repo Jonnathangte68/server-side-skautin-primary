@@ -37,6 +37,10 @@ class Recruiter extends Model
         return $this->hasManyThrough('App\Connection', 'App\User');
     }
 
+    public function vacants() {
+        return $this->hasMany('App\Vacant');
+    }
+
     public function scopeName($query, $name)
     {
         return $query->where('name', $name);

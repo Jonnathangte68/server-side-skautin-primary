@@ -25,6 +25,7 @@ Route::get('/change_route_name', function () {
 // Testing Routes
 // Route::apiResource('talentplaylists', 'API\TalentPlaylistController');
 // Route::apiResource('favorite-folders', 'API\FavoriteFolderController');
+// Route::get('filter-opportunities-for-talents', 'API\TalentOpportunityFilter');
 // End testing routes.
 
 // Private api routes
@@ -34,10 +35,10 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('retrieveImage/{id}', 'API\AssetManager@getImage');
     Route::get('downloadImage/{id}', 'API\AssetManager@downloadFile');
     Route::post('details', 'API\UserController@details');
-    // Route::post('add-playlist-video', 'API\UserController@details');
     Route::get('search', 'API\SearchController');
     Route::get('stream/{id}', 'API\VideoStreamer');
     Route::get('get-users-on-connection', 'API\UsersDetailsOnConnections');
+    Route::get('filter-opportunities-for-talents', 'API\TalentOpportunityFilter');
     
     // Resources
 
