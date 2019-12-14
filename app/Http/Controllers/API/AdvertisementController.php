@@ -4,6 +4,10 @@ namespace App\Http\Controllers\api;
 
 use Illuminate\Http\Request;
 use App\Advertisement;
+use App\StoreAsset;
+use App\Utils\Util;
+use Validator;
+use Illuminate\Support\Facades\Input;
 
 class AdvertisementController extends \App\Http\Controllers\Controller
 {
@@ -37,32 +41,30 @@ class AdvertisementController extends \App\Http\Controllers\Controller
      */
     public function store(Request $request)
     {
-        // Does not work only example
-        // validate
         // read more on validation at http://laravel.com/docs/validation
+        $util = new Util;
         $rules = array(
-            'name'       => 'required',
-            'email'      => 'required|email',
-            'nerd_level' => 'required|numeric'
+            'title'       => 'required',
+            'type'        => 'required',
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $requestValues = $request->all();
+        $validator = Validator::make($requestValues, $rules);
 
-        // process the login
         if ($validator->fails()) {
-            return Redirect::to('nerds/create')
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+            return response()->json(['status' => false, 'message' => 'Validation errors']);
         } else {
-            // store
-            $nerd = new Advertisement;
-            $nerd->name       = Input::get('name');
-            $nerd->email      = Input::get('email');
-            $nerd->nerd_level = Input::get('nerd_level');
-            $nerd->save();
-
-            // redirect
-            Session::flash('message', 'Successfully created nerd!');
-            return Redirect::to('nerds');
+            if(!$util->getLinkRegEx($requestValues['link'])) {
+                return response()->json(['status' => false, 'message' => 'Validation errors.']);
+            }
+            $advertisement             = new Advertisement;
+            $assetCreator              = new StoreAsset($requestValues['asset']);
+            $advertisement->fill($requestValues);
+            $advertisement->asset_id   = $assetCreator->getId();
+            if($advertisement->save()) {
+                return response()->json(['status' => true, 'message' => 'Add has been registered']);
+            } else {
+                return response()->json(['status' => false, 'message' => 'Validation errors.']);
+            }
         }
     }
 
@@ -99,32 +101,30 @@ class AdvertisementController extends \App\Http\Controllers\Controller
      */
     public function update(Request $request, $id)
     {
-        // Does not work only example
-        // validate
         // read more on validation at http://laravel.com/docs/validation
+        $util = new Util;
         $rules = array(
-            'name'       => 'required',
-            'email'      => 'required|email',
-            'nerd_level' => 'required|numeric'
+            'title'       => 'required',
+            'type'        => 'required',
         );
         $validator = Validator::make(Input::all(), $rules);
 
         // process the login
         if ($validator->fails()) {
-            return Redirect::to('nerds/' . $id . '/edit')
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+            return response()->json(['status' => false, 'message' => 'Validation errors']);
         } else {
-            // store
-            $nerd = Advertisement::find($id);
-            $nerd->name       = Input::get('name');
-            $nerd->email      = Input::get('email');
-            $nerd->nerd_level = Input::get('nerd_level');
-            $nerd->save();
-
-            // redirect
-            Session::flash('message', 'Successfully updated nerd!');
-            return Redirect::to('nerds');
+            if(!$util->getLinkRegEx($request->input['link'])) {
+                return response()->json(['status' => false, 'message' => 'Validation errors.']);
+            }
+            $advertisement              = Advertisement::find($id);
+            $assetCreator              = new StoreAsset($request->input['asset']);
+            $advertisement->fill($request->all());
+            $advertisement->asset_id    = $assetCreator->getId();
+            if($advertisement->save()) {
+                return response()->json(['status' => true, 'message' => 'Add has been registered']);
+            } else {
+                return response()->json(['status' => false, 'message' => 'Validation errors.']);
+            }
         }
     }
 

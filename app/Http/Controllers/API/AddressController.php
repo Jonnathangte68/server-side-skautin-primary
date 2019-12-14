@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use Illuminate\Http\Request;
+use App\Talent;
+use App\Recruiter;
 use App\Address;
+use App\Utils\Logger;
+use App\Utils\StandardResponse;
 use Validator;
 use Illuminate\Support\Facades\Input;
 
@@ -14,11 +18,31 @@ class AddressController extends \App\Http\Controllers\Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // get all the adds and retrieve
-        $address = Address::all();
-        return response()->json($address);
+        $userId = $request->user()->id;
+        $recruiter = Recruiter::where('user_id', $userId)->first();
+        if($recruiter) {
+            $address = Address::where('id', $recruiter->address_id)->first();
+            return response()->json(array(
+                    'status' => true, 
+                    'message' => $address
+                )
+            );
+        }
+        $talent = Talent::where('user_id', $userId)->first();
+        if($talent) {
+            $address = Address::where('id', $talent->address_id)->first();
+            return response()->json(array(
+                'status' => true, 
+                'message' => $address
+            )
+        );
+        }
+        return response()->json(array(
+            'status' => false, 
+            'message' => 'No address.'
+        ));
     }
 
     /**
@@ -39,22 +63,7 @@ class AddressController extends \App\Http\Controllers\Controller
      */
     public function store(Request $request)
     {
-        // read more on validation at http://laravel.com/docs/validation
-        $rules = array(
-            'name'       => 'required'
-        );
-        $validator = Validator::make(Input::all(), $rules);
-
-        if ($validator->fails()) {
-            // reject
-            return response()->json(['status' => false, 'message' => 'Validation errors']);
-        } else {
-            // store
-            $country             = new Address;
-            $country->name       = Input::get('name');
-            $country->save();
-            return response()->json(['status' => true, 'message' => 'Country has been registered']);
-        }
+        // Route not implemented address are created though another models.
     }
 
     /**
@@ -65,9 +74,28 @@ class AddressController extends \App\Http\Controllers\Controller
      */
     public function show($id)
     {
-        // get the add and return it
-        $address = Address::find($id);
-        return response()->json($address);
+        $recruiter = Recruiter::where('user_id', $id)->first();
+        if($recruiter) {
+            $address = Address::where('id', $recruiter->address_id)->first();
+            return response()->json(array(
+                    'status' => true, 
+                    'message' => $address
+                )
+            );
+        }
+        $talent = Talent::where('user_id', $id)->first();
+        if($talent) {
+            $address = Address::where('id', $talent->address_id)->first();
+            return response()->json(array(
+                'status' => true, 
+                'message' => $address
+                )
+            );
+        }
+        return response()->json(array(
+            'status' => false, 
+            'message' => 'Sorry, no address.'
+        ));
     }
 
     /**
@@ -92,7 +120,7 @@ class AddressController extends \App\Http\Controllers\Controller
     {
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'       => 'required'
+            'city_id'       => 'required:digits'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -101,10 +129,13 @@ class AddressController extends \App\Http\Controllers\Controller
             return response()->json(['status' => false, 'message' => 'Validation errors']);
         } else {
             // store
-            $address             = Address::find($id);
-            $address->name       = Input::get('name');
+            $address                   = Address::findOrFail($id);
+            $address->first_line       = Input::get('first_line');
+            $address->second_line      = Input::get('second_line');
+            $address->zip_code         = Input::get('zip_code');
+            $address->city_id          = Input::get('city_id');
             $address->save();
-            return response()->json(['status' => true, 'message' => 'Country has been registered']);
+            return response()->json(['status' => true, 'message' => 'Address has been registered']);
         }
     }
 

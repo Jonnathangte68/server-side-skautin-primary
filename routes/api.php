@@ -26,6 +26,9 @@ Route::get('/change_route_name', function () {
 // Route::apiResource('talentplaylists', 'API\TalentPlaylistController');
 // Route::apiResource('favorite-folders', 'API\FavoriteFolderController');
 // Route::get('filter-opportunities-for-talents', 'API\TalentOpportunityFilter');
+// Route::apiResource('advertisements', 'API\AdvertisementController');
+// Route::get('show-advertising', 'API\ShowAdvertisement');
+// Route::resource('interval-advertisements', 'API\AdvertisementGroupIntervalsController');
 // End testing routes.
 
 // Private api routes
@@ -39,13 +42,13 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('stream/{id}', 'API\VideoStreamer');
     Route::get('get-users-on-connection', 'API\UsersDetailsOnConnections');
     Route::get('filter-opportunities-for-talents', 'API\TalentOpportunityFilter');
+    Route::get('show-advertising', 'API\ShowAdvertisement');
     
     // Resources
 
     Route::apiResource('talentplaylists', 'API\TalentPlaylistController');
     Route::apiResource('favorite-folders', 'API\FavoriteFolderController');
     Route::apiResource('addresses', 'API\AddressController');
-    Route::apiResource('advertisements', 'API\AdvertisementController');
     Route::apiResource('applications', 'API\ApplicationController');
     Route::apiResource('assets', 'API\AssetController');
     Route::apiResource('awards', 'API\AwardController');
@@ -66,8 +69,14 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::apiResource('talents', 'API\TalentController');
     Route::apiResource('vacants', 'API\VacantController');
     Route::apiResource('pending-invitations', 'API\PendingInvitationController');
-    
-    // Not a resource controller TODO
+
+    // Admin routes
+    Route::apiResource('general-app-settings', 'API\GeneralApplicationSettingsController')->except([
+        'create', 'store', 'show', 'destroy'
+    ]);
+    Route::apiResource('advertisements', 'API\AdvertisementController');
+    Route::resource('interval-advertisements', 'API\AdvertisementGroupIntervalsController');
+    // TODO
     // Route::resource('users', 'API\UserController');
     });
 });

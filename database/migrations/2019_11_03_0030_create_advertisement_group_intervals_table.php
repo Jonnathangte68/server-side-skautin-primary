@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAdvertisementsTable extends Migration
+class CreateAdvertisementGroupIntervalsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateAdvertisementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('advertisements', function (Blueprint $table) {
+        Schema::create('advertisement_group_intervals', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->json('advertisements');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -27,6 +29,6 @@ class CreateAdvertisementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('advertisements');
+        Schema::dropIfExists('advertisement_group_intervals');
     }
 }

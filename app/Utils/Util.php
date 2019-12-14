@@ -50,4 +50,13 @@ class Util
             mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
         );
     }
+
+    public function getLinkRegEx(String $stringtotest) {
+        $pattern = '/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)+$/iD';
+        return preg_match($pattern, $stringtotest);
+    }
+
+    public function getRandomNumberBetweenValues(int $start, int $end) {
+        return rand($start, $end);
+    }
 }

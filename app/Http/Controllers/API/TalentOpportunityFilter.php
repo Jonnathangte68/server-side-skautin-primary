@@ -18,7 +18,7 @@ class TalentOpportunityFilter extends \App\Http\Controllers\Controller
      */
     public function __invoke(Request $request)
     {
-        $userId = $request->user()->id; // Replace
+        $userId = $request->user()->id;
         $limit = 10;
         $start = 0;
         $talent = Talent::where('user_id', $userId)->firstOrFail();
