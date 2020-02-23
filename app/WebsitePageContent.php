@@ -10,4 +10,6 @@ class WebsitePageContent extends Model
     use SoftDeletes;
 
     protected $table = 'website_page_content';
+
+    protected $fillable = ['code', 'content'];
 }

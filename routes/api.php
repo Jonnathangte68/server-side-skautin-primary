@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 Route::post('login', 'API\UserController@login');
 Route::post('register-talent', 'API\Auth\RegisterTalentController@register');
 Route::post('register-recruiter', 'API\Auth\RegisterRecruiterController@register');
+Route::get('website-content/{website}', 'API\WebsitePageContentController@show');
 Route::get('/change_route_name', function () {
     return response()->json(['error' => 'unauthenticated']);
 })->name('change_route_name');
@@ -29,6 +30,10 @@ Route::get('/change_route_name', function () {
 // Route::apiResource('advertisements', 'API\AdvertisementController');
 // Route::get('show-advertising', 'API\ShowAdvertisement');
 // Route::resource('interval-advertisements', 'API\AdvertisementGroupIntervalsController');
+Route::resource('website-content-test', 'API\WebsitePageContentController')->except([
+    'index', 'create', 'edit', 'update', 'destroy'
+]);
+Route::apiResource('scriptfile', 'API\ScriptFileController');
 // End testing routes.
 
 // Private api routes
@@ -76,6 +81,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     ]);
     Route::apiResource('advertisements', 'API\AdvertisementController');
     Route::resource('interval-advertisements', 'API\AdvertisementGroupIntervalsController');
+    // Route::resource('website-content', 'API\WebsitePageContentController');
     // TODO
     // Route::resource('users', 'API\UserController');
     });

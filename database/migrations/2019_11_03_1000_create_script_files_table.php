@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWebsitePageContentTable extends Migration
+class CreateScriptFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateWebsitePageContentTable extends Migration
      */
     public function up()
     {
-        Schema::create('website_page_content', function (Blueprint $table) {
+        Schema::create('script_files', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('code');
+            $table->string('file_name')->unique();
+            $table->string('webpage');
             $table->json('content')->nullable();
-            $table->json('styles')->nullable();
-            $table->json('scripts')->nullable();
+            $table->json('min_content')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +31,6 @@ class CreateWebsitePageContentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('website_page_content');
+        Schema::dropIfExists('script_files');
     }
 }
